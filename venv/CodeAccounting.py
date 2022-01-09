@@ -54,7 +54,7 @@ monday_date = convert_date(monday)
 sunday_date = convert_date(sunday)
 
 #schedule.every(2).minutes.do(week_result)
-schedule.every().monday.at("0:05").do(week_result)
+schedule.every().monday.at("00:05").do(week_result)
 Thread(target=schedule_checker).start()
 
 @bot.message_handler(content_types=['text'])
