@@ -72,7 +72,7 @@ def handle_message(message):
             int_value = int(message.text)
             global week_limit
             week_limit = week_limit - int_value
-            print(week_limit)
+            #print(week_limit)
             bot.reply_to(message, message.json['from']['first_name'] + ', остаток на неделю с ' +
                         monday_date + ' по ' + sunday_date + ' составляет ' + str(week_limit))
             
