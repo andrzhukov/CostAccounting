@@ -9,10 +9,11 @@ from time import sleep
 
 bot = telebot.TeleBot('1138419356:AAH5VitwXkiIZ9pZJRi0Gyz8601HPiM3yLY')
 CHAT_ID = -627885966
-CONS_WEEK_LIMIT = 10000
+CONS_WEEK_LIMIT = 15000
 TXT_FILE = 'accounting_database.txt'
 total_accounting_dict = {}
-week_limit = 10000
+week_limit = 15000
+saved_money = 0
 
 def convert_date(day):
     converted_date = str(day)[8:] + '.' + str(day)[5:7] + '.' + str(day)[:4]
@@ -28,21 +29,25 @@ def week_result():
     global monday_date
     global sunday_date
     global CHAT_ID
+    global saved_money
     if (CONS_WEEK_LIMIT - week_limit) > CONS_WEEK_LIMIT:
         week_result_text = 'За неделю с ' + monday_date + ' по ' + sunday_date + ' было потрачено ' + str(CONS_WEEK_LIMIT - week_limit) + ' рублей.' + \
                             '\nЛимит превышен на ' + str(abs(week_limit)) + ' рублей.'
         saved_money = 0
+        new_saved_money = 0
     elif (CONS_WEEK_LIMIT - week_limit) < CONS_WEEK_LIMIT:
-        week_result_text = 'За неделю с ' + monday_date + ' по ' + sunday_date + ' было потрачено ' + str(CONS_WEEK_LIMIT - week_limit) + ' рублей.' + \
+        week_result_text = 'За неделю с ' + monday_date + ' по ' + sunday_date + ' было потрачено ' + str(CONS_WEEK_LIMIT + saved_money - week_limit) + ' рублей.' + \
                             '\nВы сэкономили ' + str(week_limit) + ' рублей.' + '\n' + str(week_limit) + ' рублей перенесены на следующую неделю.'
-        saved_money = week_limit
+        new_saved_money = week_limit
     else:
         week_result_text = 'За неделю с ' + monday_date + ' по ' + sunday_date + ' было потрачено ' + str(CONS_WEEK_LIMIT - week_limit) + ' рублей.'
         saved_money = 0
+        new_saved_money = 0
     total_accounting_dict[monday_date + '-' + sunday_date] = CONS_WEEK_LIMIT - week_limit
     with open(TXT_FILE, 'a') as file:
-        write_text = monday_date + '-' + sunday_date + ':' + str(CONS_WEEK_LIMIT - week_limit) +"\n"
+        write_text = monday_date + '-' + sunday_date + ':' + str(CONS_WEEK_LIMIT + saved_money - week_limit) +"\n"
         file.write(write_text)
+    saved_money = new_saved_money
     week_limit = CONS_WEEK_LIMIT + saved_money
     monday_date = convert_date(date.today())
     sunday_date = convert_date(date.today() + timedelta(days=6))
